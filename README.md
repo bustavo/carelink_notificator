@@ -32,7 +32,11 @@ Set-up
 
 — Internet connection. You can set up an internet connection through Ethernet cable ( easy way ) or using a WiFi USB dongle ( guides for setting this up can be found online ).
 
-— Clone the carelink_notificator repository on your Pi: git clone https://github.com/bustavo/carelink_notificator.git
+— Clone the carelink_notificator repository on your Pi: 
+
+```
+git clone https://github.com/bustavo/carelink_notificator.git
+```
 
 — Install required gems with the following commands: 
 
