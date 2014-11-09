@@ -103,3 +103,7 @@ crontab -e
 The first line tells the Raspberry to run the script every 10 minutes.
 
 The second line tells the Raspberry to configure the Carelink USB ( from the decoding-carelink instructions ) everytime it boots.
+
+— Just Power-up when wanting to use it and maintain a close range between the Carelink USB and the pump.
+
+— Power-down when going away or when stopping using it.
