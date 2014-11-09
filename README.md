@@ -24,13 +24,19 @@ What you need?
 ====================
 
 Hardware:
+
 Raspberry Pi with its power adapter
+
 Carelink USB
+
 Wifi usb dongle ( Optional, as you can connect the device through Ethernet )
 
 Software:
+
 Python installed on the Raspberry Pi ( There are a lot of guides on how to set this up, just Google it )
+
 decoding-carelink ( http://github.com/bewest/decoding-carelink/ )
+
 Account on Pushover.net
 
 Set-up
