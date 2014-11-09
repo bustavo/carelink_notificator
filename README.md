@@ -6,8 +6,11 @@ Ruby script that uses decoding-carelink ( http://github.com/bewest/decoding-care
 This script is still under testing.
 
 As of now, it notifies for:
+
 — High Blood Glucose
+
 — Low Blood Glucose
+
 — Out of Range error ( For when the Carelink cannot access the Pump data )
 
 How is it used?
