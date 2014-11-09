@@ -26,28 +26,28 @@ Account on Pushover.net
 Set-up
 ====================
 
-1. Set up an account on Pushover.net If you are using the mobile app, you can set up the account from there.
+— Set up an account on Pushover.net If you are using the mobile app, you can set up the account from there.
 
-2. Install Python on the Raspberry, clone the decoding-carelink repository on your Pi. Before proceeding, make sure you are able to read from the Carelink USB.
+— Install Python on the Raspberry, clone the decoding-carelink repository on your Pi. Before proceeding, make sure you are able to read from the Carelink USB.
 
-3. Internet connection. You can set up an internet connection through Ethernet cable ( easy way ) or using a WiFi USB dongle ( guides for setting this up can be found online ).
+— Internet connection. You can set up an internet connection through Ethernet cable ( easy way ) or using a WiFi USB dongle ( guides for setting this up can be found online ).
 
-4. Clone the carelink_notificator repository on your Pi: git clone https://github.com/bustavo/carelink_notificator.git
+— Clone the carelink_notificator repository on your Pi: git clone https://github.com/bustavo/carelink_notificator.git
 
-5. Install required gems with the following commands: 
+— Install required gems with the following commands: 
 
 ```
 sudo gem install json
 sudo gem install rushover
 ```
 
-6. Open up ruby-carelink.rb using the editor of your choice:
+— Open up ruby-carelink.rb using the editor of your choice:
 
 ```
 sudo nano ruby-carelink.rb
 ```
 
-7. Edit the following variables:
+— Edit the following variables:
 
 ```
 raspberry_time = Time.now - 21600 # My Raspberry time was off by a couple of hours so I had to manually adjust the time by substracting seconds
@@ -59,21 +59,21 @@ pushover_app_key = "YOUR_APP_KEY" # You can get one on your Pushover account
 pushover_client_key = "YOUR_CLIENT_KEY" # You can get this on your Pushover account
 ```
 
-8. Do a test run:
+— Do a test run:
 
 ```
 ruby ruby-carelink.rb
 ```
 
-9. If everything goes OK you will receive a notification on your Pushover app.
+— If everything goes OK you will receive a notification on your Pushover app.
 
-10. Configure cronjobs so the script can run automatically once the Raspberry Pi is powered on. On your Raspberry Pi run:
+— Configure cronjobs so the script can run automatically once the Raspberry Pi is powered on. On your Raspberry Pi run:
 
 ```
 crontab -e
 ```
 
-11. Add the following lines to the file:
+— Add the following lines to the file:
 
 ```
 */10 * * * * ruby /path_to_carelink_notificator/ruby-carelink.rb
