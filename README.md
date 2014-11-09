@@ -1,7 +1,14 @@
 Carelink Notificator
 ====================
 
-Ruby script that uses decoding-carelink ( http://github.com/bewest/decoding-carelink/ ) to download Glucose History from a Medtronic pump and sends notifications to services such as Pushover
+Ruby script that uses decoding-carelink ( http://github.com/bewest/decoding-carelink/ ) to download Glucose History from a Medtronic pump and sends BG notifications to services such as Pushover
+
+This script is still under testing.
+
+As of now, it notifies for:
+— High Blood Glucose
+— Low Blood Glucose
+— Out of Range error ( For when the Carelink cannot access the Pump data )
 
 How is it used?
 ====================
