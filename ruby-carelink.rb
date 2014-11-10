@@ -27,7 +27,7 @@ page_request = `python #{decoding_carelink_path}/bin/mm-send-comm.py --init --se
 
 if page_request && page_request.partition("page': ").last.split(",")[0]
 
-  page = page_request.partition("page': ").last.split(",")[0].split("L")[0]
+  page = page_request.partition("page': ").last.split(",")[0].split("L")[0].to_i
 
   # Download Glucose History
   `python #{decoding_carelink_path}/bin/mm-send-comm.py --serial #{pumpl_serial} --port /dev/ttyUSB0 --prefix-path #{decoding_carelink_path}/bin/ tweak ReadGlucoseHistory --page #{page} --save`
@@ -39,7 +39,8 @@ if page_request && page_request.partition("page': ").last.split(",")[0]
 
     # Init Latest Values
     last_bg = 0
-    last_date = ""
+    last_date = Time.now
+    found_glucose_sensor_data = 0
 
     # Get Latest Values
     JSON.parse(history).each do |history|
@@ -47,21 +48,59 @@ if page_request && page_request.partition("page': ").last.split(",")[0]
         history.each do |hist|
           if hist.kind_of?(Array)
           elsif hist["name"] == "GlucoseSensorData"
+            found_glucose_sensor_data = 1
             last_date = hist["date"]
             last_bg = hist["sgv"]
           end
         end
       end
     end
+    
+    # If there is no GlucoseSensorData found, we probably just flipped to a new page, so we should try with the page before?
+    if found_glucose_sensor_data == 0
+      
+      # Download Glucose History
+      `python #{decoding_carelink_path}/bin/mm-send-comm.py --serial #{pumpl_serial} --port /dev/ttyUSB0 --prefix-path #{decoding_carelink_path}/bin/ tweak ReadGlucoseHistory --page #{page - 1} --save`
+
+      # Decode Glucose History
+      history = `python #{decoding_carelink_path}/list_cgm.py #{decoding_carelink_path}/bin/ReadGlucoseHistory-page-#{page - 1}.data`
+      
+      # Init Latest Values
+      last_bg = 0
+      last_date = Time.now
+
+      # Get Latest Values
+      JSON.parse(history).each do |history|
+        if history.size
+          history.each do |hist|
+            if hist.kind_of?(Array)
+            elsif hist["name"] == "GlucoseSensorData"
+              last_date = hist["date"]
+              last_bg = hist["sgv"]
+            end
+          end
+        end
+      end
+      
+    end
             
     # If date is older than 20 minutes, we probably have not calibrated! Let me know I need calibration. We adjust Raspberry Time to match local time.
     last_date_ruby = Time.new(last_date.split("T")[0].split("-")[0].to_i,last_date.split("T")[0].split("-")[1].to_i,last_date.split("T")[0].split("-")[2].to_i,last_date.split("T")[1].split(":")[0].to_i,last_date.split("T")[1].split(":")[1].to_i,last_date.split("T")[1].split(":")[2].to_i)
     
     if (last_date_ruby+(20*60)) < raspberry_time
+        
+      if found_glucose_sensor_data == 0
+
+        # Let me know, I still don't have new data to send :(
+        resp = pushover_client.notify(pushover_client_key, "Latest data is still not accessible. We should wait a couple of hours for new data :(", :title => "DATA NOT ACCESSIBLE")
+                
+      else
+        
+        # Send as important message
+        resp = pushover_client.notify(pushover_client_key, "The latest data found is more than 20 minutes old! Needs calibration?", :priority => 1, :title => "OLD DATA ALERT!")
       
-      # Send as important message
-      resp = pushover_client.notify(pushover_client_key, "The latest data found is more than 20 minutes old! Needs calibration?", :priority => 1, :title => "OLD DATA ALERT!")
-            
+      end
+      
     else
         
       if last_bg.to_i < lo_bg_limit
