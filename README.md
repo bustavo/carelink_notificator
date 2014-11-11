@@ -20,6 +20,8 @@ This script was developed to be used on a Raspberry Pi with the Carelink USB. It
 
 You basically power-up the Raspberry Pi and automatically it will start running the script every X amount of time ( using cronjob ) and it will notify Pushover everytime.
 
+![Alt text](IMG_0325.JPG?raw=true "Optional Title")
+
 What you need?
 ====================
 
@@ -107,3 +109,32 @@ The second line tells the Raspberry to configure the Carelink USB ( from the dec
 — Just Power-up when wanting to use it and maintain a close range between the Carelink USB and the pump.
 
 — Power-down when going away or when stopping using it.
+
+EXTRAS
+====================
+
+— Make the Raspberry Pi power off when removing the Carelink USB
+
+First run
+
+```
+udevadm monitor --udev --property
+```
+
+Then, unplug the Carelink USB. You will see a set of properties displayed on the screen. Take note of ID_VENDOR_ID & ID_MODEL_ID
+
+After that, create a new file in /etc/udev/rules.d/ ( You can name it however you want )
+
+Add to the file:
+
+```
+ACTION=="remove", ENV{ID_VENDOR_ID}=="YOUR_VENDOR_ID", ENV{ID_MODEL_ID}=="YOUR_MODEL_ID", RUN+="/sbin/shutdown -h now"
+```
+
+Now save, exit and reload the rules:
+
+```
+udevadm control --reload-rules
+```
+
+That's it! Next time you unplug the Carelink USB, the Raspberry Pi will shutdown, just remember to wait a couple of seconds before disconnecting ( The PWR led stays on ).
