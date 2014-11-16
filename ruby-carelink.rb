@@ -10,7 +10,7 @@ decoding_carelink_path = "/home/pi/decoding-carelink"
 
 pumpl_serial = "123456"
 lo_bg_limit = 75
-hi_gb_limit = 160
+hi_gb_limit = 280
 
 pushover_app_key = "YOUR_APP_KEY" # Set one up on your Pushover account
 pushover_client_key = "YOUR_CLIENT_KEY" # Get it on your Pushover account
@@ -111,7 +111,7 @@ if page_request && page_request.partition("page': ").last.split(",")[0]
         resp = pushover_client.notify(pushover_client_key, "#{last_bg} Blood Glucose @ #{last_date}", :priority => 1, :title => "HIGH BLOOD GLUCOSE!")
       else
         # Send as normal message
-        resp = pushover_client.notify(pushover_client_key, "#{last_bg} Blood Glucose @ #{last_date}", :title => "#{last_bg} Blood Glucose")
+        resp = pushover_client.notify(pushover_client_key, "#{last_date}", :title => "#{last_bg} Blood Glucose")
       end
     
     end
