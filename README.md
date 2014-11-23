@@ -56,6 +56,12 @@ Set-up
 git clone https://github.com/bustavo/carelink_notificator.git
 ```
 
+— Install ruby 
+
+```
+sudo apt-get install ruby1.9.1-dev
+``
+
 — Install required gems with the following commands: 
 
 ```
