@@ -17,7 +17,7 @@ As of now, it notifies for:
 
 — NEW Downward BG trends ( customizable )
 
-![Alt text](IMG_0345.JPG?raw=true "Pushover App on iOS")
+![Alt text](IMG_0345.PNG?raw=true "Pushover App on iOS")
 
 How is it used?
 ====================
