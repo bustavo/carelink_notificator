@@ -13,6 +13,12 @@ As of now, it notifies for:
 
 — Out of Range error ( For when the Carelink cannot access the Pump data )
 
+— NEW Upward BG trends ( customizable )
+
+— NEW Downward BG trends ( customizable )
+
+![Alt text](IMG_0345.JPG?raw=true "Pushover App on iOS")
+
 How is it used?
 ====================
 
@@ -20,7 +26,7 @@ This script was developed to be used on a Raspberry Pi with the Carelink USB. It
 
 You basically power-up the Raspberry Pi and automatically it will start running the script every X amount of time ( using cronjob ) and it will notify Pushover everytime.
 
-![Alt text](IMG_0325.JPG?raw=true "Optional Title")
+![Alt text](IMG_0325.JPG?raw=true "Rasbperry Pi Setup")
 
 What you need?
 ====================
@@ -46,7 +52,7 @@ Set-up
 
 — Set up an account on Pushover.net If you are using the mobile app, you can set up the account from there.
 
-— Install Python on the Raspberry, clone the decoding-carelink repository on your Pi. Before proceeding, make sure you are able to read from the Carelink USB.
+— Install Python on the Raspberry, clone the decoding-carelink repository on your Pi. Before proceeding, make sure you are able to read from the Carelink USB. ( follow instructions on http://github.com/bewest/decoding-carelink/ )
 
 — Internet connection. You can set up an internet connection through Ethernet cable ( easy way ) or using a WiFi USB dongle ( guides for setting this up can be found online ).
 
@@ -78,13 +84,19 @@ sudo nano ruby-carelink.rb
 — Edit the following variables:
 
 ```
-raspberry_time = Time.now - 21600 # My Raspberry time was off by a couple of hours so I had to manually adjust the time by substracting seconds
-decoding_carelink_path = "/home/pi/decoding-carelink" # Define the path where decoding-carelink was cloned
-pumpl_serial = "123456" # Your Medtronic serial number ( only the numbers )
-lo_bg_limit = 75 # Set your low BG level for alerts
-hi_gb_limit = 160 # Set your high BG level for alerts
-pushover_app_key = "YOUR_APP_KEY" # You can get one on your Pushover account
-pushover_client_key = "YOUR_CLIENT_KEY" # You can get this on your Pushover account
+raspberry_time = Time.now - 21600                     # Time.now +/- OFFSET_IN_SECONDS // If your Raspberry Pi time is correct, just leave Time.now
+decoding_carelink_path = "/home/pi/decoding-carelink" # Path to Ben West's decoding-carelink repository on your Raspberry Pi
+
+pumpl_serial = "123456"                               # Your pump's serial number
+lo_bg_limit = 75                                      # Below or equal to this BG level, the message will be sent with important priority
+hi_gb_limit = 280                                     # Above or equal to this BG level, the message will be sent iwth important priority
+
+upward_trend_count = 4                                # How many consecutive upward measurements to consider before sending an alarm
+downward_trend_count = 4                              # How many consecutive downward measurements to consider before sending an alarm
+trend_units_difference = 15                           # How much difference ( in blood glucose ) should there be from the initial step measurement to the last step measurement before sending an alarm
+
+pushover_app_key = "YOUR_APP_KEY"                     # Set one up on your Pushover account
+pushover_client_key = "YOUR_CLIENT_KEY"               # Get it on your Pushover account
 ```
 
 — Do a test run:
@@ -144,3 +156,5 @@ udevadm control --reload-rules
 ```
 
 That's it! Next time you unplug the Carelink USB, the Raspberry Pi will shutdown, just remember to wait a couple of seconds before disconnecting ( The PWR led stays on ).
+
+— I added a piezo-buzzer to the Raspberry Pi so that it can alert me with sound if there is no internet connection in case it is needed. If you are interested on knowing how I did this, contact me, I will be happy to help :)
