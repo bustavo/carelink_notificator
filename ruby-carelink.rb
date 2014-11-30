@@ -24,7 +24,7 @@ pushover_client_key = "YOUR_CLIENT_KEY"               # Get it on your Pushover 
 # NOTIFICATION CODE START
 
 # Check for internet connection. Restart if there is none. Give 5 minutes of wait time.
-unless `ifconfig wlan0 | grep -q "inet addr:"`
+unless system("ping -c2 www.google.com")
   
   # Sleep 4 minutes & reactivate internet connection
   sleep(4.minutes)
@@ -33,7 +33,7 @@ unless `ifconfig wlan0 | grep -q "inet addr:"`
   
 end
 
-if `ifconfig wlan0 | grep -q "inet addr:"`
+if system("ping -c2 www.google.com")
 
   # Pushover client setup
   pushover_client = Rushover::Client.new(pushover_app_key)
